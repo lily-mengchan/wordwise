@@ -14,13 +14,14 @@ import { useCities } from "../contexts/CitiesContext";
 
 function Form() {
   const [lat, lng] = useUrlPosition();
-  const { createCity, isLoading } = useCities();
+  const { createCity, isLoading, error } = useCities();
   const navigate = useNavigate();
   const [cityName, setCityName] = useState("");
   const [country, setCountry] = useState("");
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState("");
   const [emoji, setEmoji] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const {
     cityData,
     isLoading: isLoadingGeocoding,
@@ -43,6 +44,8 @@ function Form() {
 
     if (!cityName || !date) return;
 
+    setSubmitError("");
+
     const newCity = {
       cityName,
       country,
@@ -52,8 +55,12 @@ function Form() {
       position: { lat, lng },
     };
 
-    await createCity(newCity);
-    navigate("/app/cities");
+    try {
+      await createCity(newCity);
+      navigate("/app/cities");
+    } catch (err) {
+      setSubmitError(err.message);
+    }
   }
 
   if (isLoadingGeocoding) return <Spinner />;
@@ -104,6 +111,12 @@ function Form() {
           value={notes}
         />
       </div>
+
+      {submitError || error ? (
+        <div className={styles.row}>
+          <Message message={submitError || error} />
+        </div>
+      ) : null}
 
       <div className={styles.buttons}>
         <Button type="primary">Add</Button>

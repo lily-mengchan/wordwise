@@ -19,11 +19,15 @@ export function useReverseGeocoding(lat, lng) {
           setIsLoading(true);
           setError("");
 
-          const res = await fetch(`${BASE_URL}?latitude=${lat}&longitude=${lng}`);
+          const res = await fetch(
+            `${BASE_URL}?latitude=${lat}&longitude=${lng}`,
+          );
           const data = await res.json();
 
           if (!data.countryCode) {
-            throw new Error("That doesn't seem to be a city. Click somewhere else.");
+            throw new Error(
+              "That doesn't seem to be a city. Click somewhere else.",
+            );
           }
 
           const nextCityData = {

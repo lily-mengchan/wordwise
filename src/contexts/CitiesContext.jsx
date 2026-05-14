@@ -126,13 +126,21 @@ function CitiesProvider({ children }) {
         body: JSON.stringify(newCity),
         headers: { "Content-Type": "application/json" },
       });
+
+      if (!res.ok) {
+        throw new Error("There was an error creating the city.");
+      }
+
       const data = await res.json();
       dispatch({ type: "city/created", payload: data });
+      return data;
     } catch {
+      const errorMessage = "There was an error creating data...";
       dispatch({
         type: "rejected",
-        payload: "There was an error creating data...",
+        payload: errorMessage,
       });
+      throw new Error(errorMessage);
     }
   }
 

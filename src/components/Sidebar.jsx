@@ -8,7 +8,10 @@ function Sidebar() {
     <div className={styles.sidebar}>
       <Logo />
       <AppNav />
-      <Outlet />
+
+      <div className={styles.content}>
+        <Outlet />
+      </div>
 
       <footer className={styles.footer}>
         <p className={styles.copyright}>
